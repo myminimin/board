@@ -1,0 +1,38 @@
+package org.zerock.board.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
+@Builder
+@AllArgsConstructor
+@Data
+public class PageRequestDTO {
+
+    // 페이징용
+    private int page;
+    private int size;
+
+    // 검색용
+    private String type;    // 검색 조건
+    private String keyword; // 검색 키워드
+
+    // 페이지 번호 등은 기본값을 가지는 것이 좋기 때문에 1과 10이라는 값을 이용한다
+    public PageRequestDTO(){
+        this.page = 1;
+        this.size = 10;
+    }
+
+    /* JPA를 이용하는 경우에는 페이지 번호가 0부터 시작한다는 점을 감안해서
+       1페이지의 경우 0이 될 수 있도록 page-1을 하는 형태로 작성,
+       정렬은 나중에 다양한 상황에서 쓰기 위해서 별도의 파라미터로 받도록 설계함
+     */
+    public Pageable getPageable(Sort sort){
+
+        return PageRequest.of(page -1, size, sort);
+    }
+
+}
